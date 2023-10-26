@@ -16,8 +16,10 @@ class MainViewModel : ViewModel() {
 
     fun initWelcomeMessage() {
         viewModelScope.launch {
-            delay(10000)
-            _welcomeMessage.emit("Hello World ${getCurrentTimeMillis()}")
+            repeat(20) {
+                delay(1000)
+                _welcomeMessage.emit("Hello World ${it}")
+            }
         }
     }
 

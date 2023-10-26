@@ -1,11 +1,13 @@
 package com.github.coroutines_android.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.github.coroutines_android.databinding.ActivityMainBinding
+import com.github.coroutines_android.ext.observeWithLifecycle
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -26,14 +28,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun initUi() {
         lifecycleScope.launch {
-            viewModel.welcomeMessage
-                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .collect {
-                    //In viewmodel, stateflow will emit the value after 10s delay.
-                    //During the emit, if application is in background then collect won't get called.
-                    //Once app get in foreground then collect will be called
-                    binding.welcomeMessage.text = it
-                }
+            viewModel.welcomeMessage.observeWithLifecycle(lifecycleOwner = this@MainActivity) {
+                Log.d("MainActivityTest", "$it")
+                binding.welcomeMessage.text = it
+            }
+//                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+//                .collect {
+//                    //In viewmodel, stateflow will emit the value after 10s delay.
+//                    //During the emit, if application is in background then collect won't get called.
+//                    //Once app get in foreground then collect will be called
+//                    Log.d("MainActivityTest", "$it")
+//                    binding.welcomeMessage.text = it
+//                }
         }
         viewModel.initWelcomeMessage()
     }
