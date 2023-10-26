@@ -2,6 +2,7 @@ package com.github.coroutines_android.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.coroutines_android.util.getCurrentTimeMillis
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -9,15 +10,14 @@ import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
 
-
-    private val _welcomeMessage: MutableStateFlow<String> = MutableStateFlow("")
+    private val _welcomeMessage: MutableStateFlow<String> = MutableStateFlow(getCurrentTimeMillis())
     val welcomeMessage: StateFlow<String>
         get() = _welcomeMessage
 
     fun initWelcomeMessage() {
         viewModelScope.launch {
-            delay(1000)
-            _welcomeMessage.emit("Hello World")
+            delay(10000)
+            _welcomeMessage.emit("Hello World ${getCurrentTimeMillis()}")
         }
     }
 
