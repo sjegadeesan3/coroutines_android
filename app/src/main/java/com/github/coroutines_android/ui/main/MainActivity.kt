@@ -29,6 +29,9 @@ class MainActivity : AppCompatActivity() {
             viewModel.welcomeMessage
                 .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
+                    //In viewmodel, stateflow will emit the value after 10s delay.
+                    //During the emit, if application is in background then collect won't get called.
+                    //Once app get in foreground then collect will be called
                     binding.welcomeMessage.text = it
                 }
         }
