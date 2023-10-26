@@ -1,9 +1,13 @@
 package com.github.coroutines_android.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.github.coroutines_android.databinding.ActivityMainBinding
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -21,6 +25,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initUi() {
-        Log.d(TAG, viewModel.getHello())
+        lifecycleScope.launch {
+            viewModel.welcomeMessage
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect {
+                    binding.welcomeMessage.text = it
+                }
+        }
+        viewModel.initWelcomeMessage()
     }
 }
